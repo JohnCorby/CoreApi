@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
+
 public class Common {
     // Convert array to list and vice versa
     public static <T> List<T> toList(T[] o) {
@@ -106,7 +108,7 @@ public class Common {
         try {
             action.run();
         } catch (Exception e) {
-            MessageHandler.error(e);
+            messageHandler.error(e);
         }
     }
 
@@ -114,7 +116,7 @@ public class Common {
         try {
             return action.call();
         } catch (Exception e) {
-            MessageHandler.error(e);
+            messageHandler.error(e);
             return null;
         }
     }

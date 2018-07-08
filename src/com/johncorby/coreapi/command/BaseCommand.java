@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 public abstract class BaseCommand {
     private String description, usage, permission;
 
-    BaseCommand(String description, String usage, String permission) {
+    public BaseCommand(String description, String usage, String permission) {
         this.description = description;
         this.usage = usage;
         this.permission = permission;

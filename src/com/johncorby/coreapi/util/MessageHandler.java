@@ -9,30 +9,26 @@ import java.util.logging.Level;
 
 import static com.johncorby.coreapi.util.MessageHandler.MessageType.*;
 
-public class MessageHandler {
-    private static final String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + "VirtualRedstone" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET;
+public abstract class MessageHandler {
+    private final String prefix;
 
-    public static void error(Exception exception) {
-        exception.printStackTrace();
+    public MessageHandler() {
+        prefix = getPrefix();
     }
 
-    public static boolean playerError(CommandSender to, Object... messages) {
-        for (Object m : messages)
-            msg(to, ERROR, "Error: " + m);
-        return false;
-    }
+    protected abstract String getPrefix();
 
     // Message of type to player
-    public static void msg(CommandSender to, MessageType type, Object... messages) {
+    public void msg(CommandSender to, MessageType type, Object... messages) {
         msgP(to, type, "", messages);
     }
 
-    public static void msgP(CommandSender to, MessageType type, String prefix, Object... messages) {
+    public void msgP(CommandSender to, MessageType type, String prefix, Object... messages) {
         for (Object message : messages) {
             if (message instanceof Object[]) message = Arrays.toString((Object[]) message);
             String string = message.toString();
 
-            StringBuilder stringF = new StringBuilder(MessageHandler.prefix).append(type.get()).append(" ");
+            StringBuilder stringF = new StringBuilder(this.prefix).append(type.get()).append(" ");
             if (!prefix.isEmpty()) stringF.append(prefix).append(" ");
             stringF.append(string);
             //if (!prefix.isEmpty()) stringF.append(type.get()).append(prefix).append(" ");
@@ -46,44 +42,44 @@ public class MessageHandler {
     }
 
     // Log of type to console
-    public static void log(MessageType type, Object... messages) {
+    public void log(MessageType type, Object... messages) {
         logP(type, "", messages);
     }
 
-    public static void logP(MessageType type, String prefix, Object... messages) {
+    public void logP(MessageType type, String prefix, Object... messages) {
         msgP(Bukkit.getConsoleSender(), type, prefix, messages);
     }
 
     // Nice stuff
-    public static void info(Object... msgs) {
+    public void info(Object... msgs) {
         log(INFO, msgs);
     }
 
-    public static void warn(Object... msgs) {
+    public void warn(Object... msgs) {
         log(WARN, msgs);
     }
 
-    public static void error(Object... msgs) {
+    public void error(Object... msgs) {
         log(ERROR, msgs);
     }
 
-    public static void debug(Object... msgs) {
+    public void debug(Object... msgs) {
         log(DEBUG, msgs);
     }
 
-    public static void info(CommandSender to, Object... msgs) {
+    public void info(CommandSender to, Object... msgs) {
         msg(to, INFO, msgs);
     }
 
-    public static void warn(CommandSender to, Object... msgs) {
+    public void warn(CommandSender to, Object... msgs) {
         msg(to, WARN, msgs);
     }
 
-    public static void error(CommandSender to, Object... msgs) {
+    public void error(CommandSender to, Object... msgs) {
         msg(to, ERROR, msgs);
     }
 
-    public static void debug(CommandSender to, Object... msgs) {
+    public void debug(CommandSender to, Object... msgs) {
         msg(to, DEBUG, msgs);
     }
 

@@ -4,8 +4,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.johncorby.virtualredstone.util.MessageHandler.MessageType.*;
-import static com.johncorby.virtualredstone.util.MessageHandler.logP;
+import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
+import static com.johncorby.coreapi.util.MessageHandler.MessageType.*;
 
 /**
  * Store classes to manage them
@@ -49,19 +49,19 @@ public abstract class StoredClass {
     }
 
     public final void info(Object... msgs) {
-        logP(INFO, toString(), msgs);
+        messageHandler.logP(INFO, toString(), msgs);
     }
 
     public final void warn(Object... msgs) {
-        logP(WARN, toString(), msgs);
+        messageHandler.logP(WARN, toString(), msgs);
     }
 
     public final void error(Object... msgs) {
-        logP(ERROR, toString(), msgs);
+        messageHandler.logP(ERROR, toString(), msgs);
     }
 
     public final void debug(Object... msgs) {
-        logP(DEBUG, toString(), msgs);
+        messageHandler.logP(DEBUG, toString(), msgs);
     }
 
     public List<String> getDebug() {

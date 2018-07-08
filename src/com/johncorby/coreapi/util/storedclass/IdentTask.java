@@ -1,5 +1,7 @@
 package com.johncorby.coreapi.util.storedclass;
 
+import com.johncorby.coreapi.util.Runnable;
+
 public abstract class IdentTask<I> extends Identifiable<I> {
     protected Task task;
 

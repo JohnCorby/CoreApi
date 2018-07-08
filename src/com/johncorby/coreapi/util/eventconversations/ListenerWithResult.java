@@ -1,11 +1,12 @@
 package com.johncorby.coreapi.util.eventconversations;
 
+import com.johncorby.coreapi.CoreApiPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.event.*;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 
-import static com.johncorby.virtualredstone.VirtualRedstone.virtualRedstone;
+import static com.johncorby.coreapi.CoreApiPlugin.plugin;
 
 public abstract class ListenerWithResult<E extends Event> implements Listener, EventExecutor {
     private final Class<E> event;
@@ -36,7 +37,7 @@ public abstract class ListenerWithResult<E extends Event> implements Listener, E
 
     public final void register() {
         unregister();
-        Bukkit.getPluginManager().registerEvent(event, this, priority, this, virtualRedstone, ignoreCancelled);
+        Bukkit.getPluginManager().registerEvent(event, this, priority, this, plugin, ignoreCancelled);
     }
 
     public final void unregister() {

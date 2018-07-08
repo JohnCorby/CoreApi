@@ -1,46 +1,48 @@
 package com.johncorby.coreapi.util;
 
+import com.johncorby.coreapi.CoreApiPlugin;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.johncorby.virtualredstone.VirtualRedstone.CONFIG;
-import static com.johncorby.virtualredstone.VirtualRedstone.virtualRedstone;
-import static com.johncorby.virtualredstone.util.MessageHandler.MessageType.INFO;
+import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
+import static com.johncorby.coreapi.CoreApiPlugin.plugin;
+import static com.johncorby.coreapi.util.MessageHandler.MessageType.INFO;
 
 public class Config {
     public Config() {
         // Setup
-        virtualRedstone.getConfig().options().copyDefaults(true);
-        virtualRedstone.saveConfig();
+        plugin.getConfig().options().copyDefaults(true);
+        plugin.saveConfig();
 
         // Load statics
         for (Object object : get("Statics")) {
             try {
-                MessageHandler.log(INFO, "Found static " + object + " in config");
+                messageHandler.log(INFO, "Found static " + object + " in config");
             } catch (Exception e) {
-                e.printStackTrace();
+                messageHandler.error(e);
             }
         }
 
         // Load signs
         for (Object object : get("Signs")) {
             try {
-                MessageHandler.log(INFO, "Found sign " + object + " in config");
+                messageHandler.log(INFO, "Found sign " + object + " in config");
             } catch (Exception e) {
-                e.printStackTrace();
+                messageHandler.error(e);
             }
         }
     }
 
     public static Set<Object> get(String path) {
-        return new HashSet<>(CONFIG.getList(path));
+        return new HashSet<>(plugin.getConfig().getList(path));
     }
 
     public static void set(String path, Set<Object> set) {
         //set.removeIf(Objects::isNull);
-        CONFIG.set(path, new ArrayList<>(set));
-        virtualRedstone.saveConfig();
+        plugin.getConfig().set(path, new ArrayList<>(set));
+        plugin.saveConfig();
     }
 
     public static void add(String path, Object object) {

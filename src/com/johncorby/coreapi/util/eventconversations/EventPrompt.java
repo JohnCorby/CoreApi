@@ -11,7 +11,7 @@ import org.bukkit.plugin.EventExecutor;
 
 import java.util.function.Function;
 
-import static com.johncorby.virtualredstone.VirtualRedstone.virtualRedstone;
+import static com.johncorby.coreapi.CoreApiPlugin.plugin;
 
 public abstract class EventPrompt<E extends Event> implements Listener, EventExecutor {
     private final Class<E> event;
@@ -48,7 +48,7 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
 
     public final void register() {
         unregister();
-        Bukkit.getPluginManager().registerEvent(event, conversation, priority, this, virtualRedstone, ignoreCancelled);
+        Bukkit.getPluginManager().registerEvent(event, conversation, priority, this, plugin, ignoreCancelled);
     }
 
     public final void unregister() {

@@ -1,6 +1,6 @@
 package com.johncorby.coreapi.util.eventconversations;
 
-import com.johncorby.virtualredstone.util.storedclass.Identifiable;
+import com.johncorby.coreapi.util.storedclass.Identifiable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;

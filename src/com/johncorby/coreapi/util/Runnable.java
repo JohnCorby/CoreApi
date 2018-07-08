@@ -1,10 +1,12 @@
 package com.johncorby.coreapi.util;
 
-import com.johncorby.virtualredstone.VirtualRedstone;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
+
+import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
+import static com.johncorby.coreapi.CoreApiPlugin.plugin;
 
 /**
  * Convenient version of BukkitRunnable
@@ -27,37 +29,37 @@ public abstract class Runnable implements java.lang.Runnable {
     @Nullable
     public final synchronized BukkitTask runTask() {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTask(VirtualRedstone.virtualRedstone, this));
+        return setupTask(Bukkit.getScheduler().runTask(plugin, this));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskAsynchronously() {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskAsynchronously(VirtualRedstone.virtualRedstone, this));
+        return setupTask(Bukkit.getScheduler().runTaskAsynchronously(plugin, this));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskLater(final long delay) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskLater(VirtualRedstone.virtualRedstone, this, delay));
+        return setupTask(Bukkit.getScheduler().runTaskLater(plugin, this, delay));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskLaterAsynchronously(final long delay) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskLaterAsynchronously(VirtualRedstone.virtualRedstone, this, delay));
+        return setupTask(Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this, delay));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskTimer(final long delay, final long period) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskTimer(VirtualRedstone.virtualRedstone, this, delay, period));
+        return setupTask(Bukkit.getScheduler().runTaskTimer(plugin, this, delay, period));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskTimerAsynchronously(final long delay, final long period) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskTimerAsynchronously(VirtualRedstone.virtualRedstone, this, delay, period));
+        return setupTask(Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this, delay, period));
     }
 
     public final synchronized int getTaskId() {
@@ -70,7 +72,7 @@ public abstract class Runnable implements java.lang.Runnable {
             if (task == null)
                 throw new IllegalStateException("Not scheduled");
         } catch (Exception e) {
-            MessageHandler.error(e);
+            messageHandler.error(e);
             return true;
         }
         return false;
@@ -82,11 +84,11 @@ public abstract class Runnable implements java.lang.Runnable {
                 if (!task.isCancelled())
                     throw new IllegalStateException("Still running as task " + getTaskId());
                 else {
-                    MessageHandler.debug("Cancelled task " + getTaskId());
+                    messageHandler.debug("Cancelled task " + getTaskId());
                     cancel();
                 }
         } catch (Exception e) {
-            MessageHandler.error(e);
+            messageHandler.error(e);
             return true;
         }
         return false;
