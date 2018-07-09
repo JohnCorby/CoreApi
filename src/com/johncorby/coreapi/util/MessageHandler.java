@@ -9,26 +9,24 @@ import java.util.logging.Level;
 
 import static com.johncorby.coreapi.util.MessageHandler.MessageType.*;
 
-public abstract class MessageHandler {
-    private final String prefix;
+public class MessageHandler {
+    private static String prefix;
 
-    public MessageHandler() {
-        prefix = getPrefix();
+    public MessageHandler(String prefix) {
+        MessageHandler.prefix = prefix;
     }
 
-    protected abstract String getPrefix();
-
     // Message of type to player
-    public void msg(CommandSender to, MessageType type, Object... messages) {
+    private static void msg(CommandSender to, MessageType type, Object... messages) {
         msgP(to, type, "", messages);
     }
 
-    public void msgP(CommandSender to, MessageType type, String prefix, Object... messages) {
+    private static void msgP(CommandSender to, MessageType type, String prefix, Object... messages) {
         for (Object message : messages) {
             if (message instanceof Object[]) message = Arrays.toString((Object[]) message);
-            String string = message.toString();
+            String string = String.valueOf(message);
 
-            StringBuilder stringF = new StringBuilder(this.prefix).append(type.get()).append(" ");
+            StringBuilder stringF = new StringBuilder(MessageHandler.prefix).append(type.get()).append(" ");
             if (!prefix.isEmpty()) stringF.append(prefix).append(" ");
             stringF.append(string);
             //if (!prefix.isEmpty()) stringF.append(type.get()).append(prefix).append(" ");
@@ -42,49 +40,49 @@ public abstract class MessageHandler {
     }
 
     // Log of type to console
-    public void log(MessageType type, Object... messages) {
+    private static void log(MessageType type, Object... messages) {
         logP(type, "", messages);
     }
 
-    public void logP(MessageType type, String prefix, Object... messages) {
+    public static void logP(MessageType type, String prefix, Object... messages) {
         msgP(Bukkit.getConsoleSender(), type, prefix, messages);
     }
 
     // Nice stuff
-    public void info(Object... msgs) {
+    public static void info(Object... msgs) {
         log(INFO, msgs);
     }
 
-    public void warn(Object... msgs) {
+    public static void warn(Object... msgs) {
         log(WARN, msgs);
     }
 
-    public void error(Object... msgs) {
+    public static void error(Object... msgs) {
         log(ERROR, msgs);
     }
 
-    public void debug(Object... msgs) {
+    public static void debug(Object... msgs) {
         log(DEBUG, msgs);
     }
 
-    public void info(CommandSender to, Object... msgs) {
+    public static void info(CommandSender to, Object... msgs) {
         msg(to, INFO, msgs);
     }
 
-    public void warn(CommandSender to, Object... msgs) {
+    public static void warn(CommandSender to, Object... msgs) {
         msg(to, WARN, msgs);
     }
 
-    public void error(CommandSender to, Object... msgs) {
+    public static void error(CommandSender to, Object... msgs) {
         msg(to, ERROR, msgs);
     }
 
-    public void debug(CommandSender to, Object... msgs) {
+    public static void debug(CommandSender to, Object... msgs) {
         msg(to, DEBUG, msgs);
     }
 
     public enum MessageType {
-        INFO(ChatColor.DARK_GRAY, Level.INFO),
+        INFO(ChatColor.GRAY, Level.INFO),
         WARN(ChatColor.YELLOW, Level.WARNING),
         ERROR(ChatColor.RED, Level.SEVERE),
         DEBUG(ChatColor.AQUA, Level.FINE);

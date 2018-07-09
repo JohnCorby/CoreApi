@@ -1,4 +1,4 @@
-package com.johncorby.coreapi.util.eventconversations;
+package com.johncorby.coreapi.util.eventconversation;
 
 import com.johncorby.coreapi.util.storedclass.Identifiable;
 import org.bukkit.entity.Player;
@@ -39,7 +39,7 @@ public class EventConversation extends Identifiable<Player> implements Listener 
     }
 
     public void begin() throws IllegalStateException {
-        if (!exists)
+        if (!exists())
             throw new IllegalStateException(this + " doesn't exist");
         if (firstPrompt == null)
             throw new IllegalStateException(this + " doens't have firstPrompt");
@@ -51,7 +51,7 @@ public class EventConversation extends Identifiable<Player> implements Listener 
     }
 
     public synchronized void abandon() throws IllegalStateException {
-        if (!exists)
+        if (!exists())
             throw new IllegalStateException(this + " doesn't exist");
         if (currentPrompt == null) {
             abandoned = true;

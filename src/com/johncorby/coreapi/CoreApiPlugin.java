@@ -1,39 +1,38 @@
 package com.johncorby.coreapi;
 
+import com.johncorby.coreapi.command.BaseCommand;
 import com.johncorby.coreapi.command.CommandHandler;
 import com.johncorby.coreapi.command.TabCompleteHandler;
-import com.johncorby.coreapi.event.EventHandler;
+import com.johncorby.coreapi.listener.ListenerHandler;
 import com.johncorby.coreapi.util.MessageHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class CoreApiPlugin extends JavaPlugin {
-    public static JavaPlugin plugin;
-    public static CommandHandler commandHandler;
-    public static TabCompleteHandler tabCompleteHandler;
-    public static EventHandler eventHandler;
-    public static MessageHandler messageHandler;
-
-    @Override
-    public void onLoad() {
-        plugin = this;
-        register();
-        tabCompleteHandler = new TabCompleteHandler();
-
-        messageHandler.info(plugin.getName() + " loaded");
-    }
+    public static CoreApiPlugin PLUGIN;
 
     @Override
     public void onEnable() {
-        messageHandler.info(plugin.getName() + " enabled");
+        PLUGIN = this;
+        new MessageHandler(getMessagePrefix());
+        new CommandHandler(getCommands());
+        new TabCompleteHandler();
+        new ListenerHandler(getListeners());
+
+        MessageHandler.info(PLUGIN.getName() + " enabled");
     }
 
     @Override
     public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
 
-        messageHandler.info(plugin.getName() + " disabled");
+        MessageHandler.info(PLUGIN.getName() + " disabled");
     }
 
-    public abstract void register();
+    public abstract String getMessagePrefix();
+
+    public abstract BaseCommand[] getCommands();
+
+    public abstract Listener[] getListeners();
 }

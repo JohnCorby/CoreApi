@@ -11,56 +11,48 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
-import static com.johncorby.coreapi.CoreApiPlugin.plugin;
+import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
 import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
-public abstract class CommandHandler implements CommandExecutor {
+public class CommandHandler implements CommandExecutor {
     public static Set<BaseCommand> commands = new HashSet<>();
 
-    public CommandHandler() {
+    public CommandHandler(BaseCommand... baseCommands) {
         // Register base command
-        plugin.getCommand(plugin.getName()).setExecutor(this);
+        PLUGIN.getCommand(PLUGIN.getName()).setExecutor(this);
 
         // Register BaseCommands
-        register();
-        //register(new Help());
-
-        //register(new Reload());
-        //register(new Add());
-        //register(new Debug());
-        //register(new SetTableCombo());
-
-        //TabCompleteHandler.register("help", 0, () -> Common.map(commands, BaseCommand::getName));
+        register(new Reload());
+        register(new Debug());
+        for (BaseCommand command : baseCommands)
+            register(command);
     }
 
-    protected abstract void register();
-
-    public void register(BaseCommand command) {
+    public static void register(BaseCommand command) {
         commands.add(command);
     }
 
     // Get commands
-    public Set<BaseCommand> getCommands(CommandSender who) {
+    public static Set<BaseCommand> getCommands(CommandSender who) {
         return commands.stream().filter(c -> c.hasPermission(who)).collect(Collectors.toSet());
     }
 
-    public BaseCommand getCommand(String name) {
+    public static BaseCommand getCommand(String name) {
         for (BaseCommand command : commands)
             if (command.getName().equals(name)) return command;
         return null;
     }
 
-    private void getHelp(Player sender, BaseCommand... commands) {
+    private static void getHelp(Player sender, BaseCommand... commands) {
+        // Filter out non-perm commands
+        commands = Arrays.stream(commands).filter(baseCommand -> baseCommand.hasPermission(sender)).toArray(BaseCommand[]::new);
+
         // Header
-        if (commands.length == 1)
-            messageHandler.msg(sender, MessageHandler.MessageType.INFO, "----- Help for command " + commands[0].getName() + " -----");
-        else
-            messageHandler.msg(sender, MessageHandler.MessageType.INFO, "----- Help for commands -----");
+        MessageHandler.info(sender, "----- Help for commands -----");
 
         // Get help for commands
         for (BaseCommand c : commands) {
-            messageHandler.msg(sender, MessageHandler.MessageType.INFO, "/virtualredstone " + c.getName() + " " + c.getUsage() + " - " + c.getDescription());
+            MessageHandler.info(sender, "/virtualredstone " + c.getName() + " " + c.getUsage() + " - " + c.getDescription());
         }
     }
 
@@ -72,7 +64,7 @@ public abstract class CommandHandler implements CommandExecutor {
 
         // If sender not player: say so
         if (!(sender instanceof Player)) {
-            messageHandler.error(sender, "Sender must be player");
+            MessageHandler.error(sender, "Sender must be player");
             return false;
         }
         Player player = (Player) sender;
@@ -86,7 +78,7 @@ public abstract class CommandHandler implements CommandExecutor {
 
         // If command not found or no permission: say so
         if (baseCommand == null || !baseCommand.hasPermission(player)) {
-            messageHandler.error(player, "Command " + args[0] + " not found", "Do /virtualredstone for a list of commands");
+            MessageHandler.error(player, "Command " + args[0] + " not found", "Do /virtualredstone for a list of commands");
             return false;
         }
 
@@ -96,7 +88,8 @@ public abstract class CommandHandler implements CommandExecutor {
         try {
             return baseCommand.onCommand(player, args);
         } catch (Exception e) {
-            messageHandler.error(player, e, getStackTrace(e));
+            MessageHandler.error(player, e);
+            MessageHandler.error(getStackTrace(e));
             return false;
         }
     }

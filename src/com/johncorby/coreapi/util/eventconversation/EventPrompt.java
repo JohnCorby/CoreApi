@@ -1,4 +1,4 @@
-package com.johncorby.coreapi.util.eventconversations;
+package com.johncorby.coreapi.util.eventconversation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,7 +11,7 @@ import org.bukkit.plugin.EventExecutor;
 
 import java.util.function.Function;
 
-import static com.johncorby.coreapi.CoreApiPlugin.plugin;
+import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
 
 public abstract class EventPrompt<E extends Event> implements Listener, EventExecutor {
     private final Class<E> event;
@@ -48,7 +48,7 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
 
     public final void register() {
         unregister();
-        Bukkit.getPluginManager().registerEvent(event, conversation, priority, this, plugin, ignoreCancelled);
+        Bukkit.getPluginManager().registerEvent(event, conversation, priority, this, PLUGIN, ignoreCancelled);
     }
 
     public final void unregister() {

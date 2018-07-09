@@ -39,7 +39,7 @@ public abstract class Identifiable<I> extends StoredClass {
     }
 
     public final I get() throws IllegalStateException {
-        if (!exists)
+        if (!exists())
             throw new IllegalStateException(this + " doesn't exist");
         if (!available()) {
             super.dispose();

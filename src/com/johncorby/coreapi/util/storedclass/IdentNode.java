@@ -55,13 +55,13 @@ public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode> ext
     }
 
     public P getParent() throws IllegalStateException {
-        if (!exists)
+        if (!exists())
             throw new IllegalStateException(this + " doesn't exist");
         return parent;
     }
 
     public Set<C> getChildren() {
-        if (!exists)
+        if (!exists())
             throw new IllegalStateException(this + " doesn't exist");
         return children;
     }

@@ -1,10 +1,10 @@
 package com.johncorby.coreapi.util.storedclass;
 
+import com.johncorby.coreapi.util.MessageHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
 import static com.johncorby.coreapi.util.MessageHandler.MessageType.*;
 
 /**
@@ -12,7 +12,7 @@ import static com.johncorby.coreapi.util.MessageHandler.MessageType.*;
  */
 public abstract class StoredClass {
     protected static final ClassSet classes = new ClassSet();
-    protected boolean exists = false;
+    public boolean exists = false;
 
     public StoredClass() throws IllegalStateException {
         create();
@@ -28,6 +28,10 @@ public abstract class StoredClass {
         exists = true;
         debug("Created");
         return true;
+    }
+
+    public final boolean exists() {
+        return exists;
     }
 
     public final boolean stored() {
@@ -49,19 +53,19 @@ public abstract class StoredClass {
     }
 
     public final void info(Object... msgs) {
-        messageHandler.logP(INFO, toString(), msgs);
+        MessageHandler.logP(INFO, toString(), msgs);
     }
 
     public final void warn(Object... msgs) {
-        messageHandler.logP(WARN, toString(), msgs);
+        MessageHandler.logP(WARN, toString(), msgs);
     }
 
     public final void error(Object... msgs) {
-        messageHandler.logP(ERROR, toString(), msgs);
+        MessageHandler.logP(ERROR, toString(), msgs);
     }
 
     public final void debug(Object... msgs) {
-        messageHandler.logP(DEBUG, toString(), msgs);
+        MessageHandler.logP(DEBUG, toString(), msgs);
     }
 
     public List<String> getDebug() {

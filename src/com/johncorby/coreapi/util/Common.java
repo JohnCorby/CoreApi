@@ -1,15 +1,12 @@
 package com.johncorby.coreapi.util;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.Runnable;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
 
 public class Common {
     // Convert array to list and vice versa
@@ -51,6 +48,27 @@ public class Common {
         return map(ol, Common::toInt);
     }
 
+    // Concat arrays/lists
+    @SafeVarargs
+    public static <T> T[] concat(T[] instance, T[]... arrays) {
+        assert arrays.length > 1;
+        List<T> result = new ArrayList<>();
+        for (T[] array : arrays) {
+            result.addAll(Arrays.asList(array));
+        }
+        return result.toArray(instance);
+    }
+
+    @SafeVarargs
+    public static <T> List<T> concat(List<T>... lists) {
+        assert lists.length > 1;
+        List<T> result = new ArrayList<>();
+        for (List<T> list : lists) {
+            result.addAll(list);
+        }
+        return result;
+    }
+
     // Map list/array
     public static <T, R> R[] map(T[] array, Function<? super T, ? extends R> function, R[] instance) {
         return toArray(Arrays.stream(array).map(function).collect(Collectors.toList()), instance);
@@ -86,7 +104,7 @@ public class Common {
     }
 
     // Find property R of list E and return E that has property R
-    public static <T, R> T find(T[] array, T[] instance, Function<? super T, ? extends R> function, R element) {
+    public static <T, R> T find(T[] array, Function<? super T, ? extends R> function, R element) {
         return find(Arrays.asList(array), function, element);
     }
 
@@ -97,9 +115,9 @@ public class Common {
 
 
     // See if one list has an item from another
-    public static <T> boolean containsAny(List<T> list1, List<T> list2) {
-        for (T e : list2)
-            if (list1.contains(e)) return true;
+    public static <T> boolean containsAny(Collection<T> collection1, Collection<T> collection2) {
+        for (T e : collection2)
+            if (collection1.contains(e)) return true;
         return false;
     }
 
@@ -108,7 +126,7 @@ public class Common {
         try {
             action.run();
         } catch (Exception e) {
-            messageHandler.error(e);
+            MessageHandler.error(e);
         }
     }
 
@@ -116,7 +134,7 @@ public class Common {
         try {
             return action.call();
         } catch (Exception e) {
-            messageHandler.error(e);
+            MessageHandler.error(e);
             return null;
         }
     }
@@ -138,7 +156,7 @@ public class Common {
     }
 
     // Iterate through items "async" using Runnables
-    public static abstract class RunnableIterator<E> extends Runnable implements Consumer<E> {
+    public static abstract class RunnableIterator<E> extends com.johncorby.coreapi.util.Runnable implements Consumer<E> {
         private Iterator<E> iterator;
         private int itemsPerTick;
 

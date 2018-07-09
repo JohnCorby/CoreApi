@@ -3,7 +3,10 @@ package com.johncorby.coreapi.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
+
 public abstract class BaseCommand {
+    protected static final String PERM_ADMIN = PLUGIN.getName() + ".admin";
     private String description, usage, permission;
 
     public BaseCommand(String description, String usage, String permission) {

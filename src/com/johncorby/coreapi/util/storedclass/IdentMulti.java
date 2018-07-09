@@ -34,7 +34,7 @@ public abstract class IdentMulti extends StoredClass {
     }
 
     public final Object[] get() throws IllegalStateException {
-        if (!exists)
+        if (!exists())
             throw new IllegalStateException(this + " doesn't exist");
         int a = getUnavailable() + 1;
         if (a > 0) {

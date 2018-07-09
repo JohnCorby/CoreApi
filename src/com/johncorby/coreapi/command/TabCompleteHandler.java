@@ -8,25 +8,24 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.johncorby.coreapi.CoreApiPlugin.commandHandler;
-import static com.johncorby.coreapi.CoreApiPlugin.plugin;
+import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
 
 public class TabCompleteHandler implements TabCompleter {
     private static Set<TabResult> tabResults = new HashSet<>();
 
     public TabCompleteHandler() {
         // Register tab completer
-        plugin.getCommand(plugin.getName()).setTabCompleter(this);
+        PLUGIN.getCommand(PLUGIN.getName()).setTabCompleter(this);
     }
 
-    public void register(String command, int argPos, Supplier<Set<String>> results) {
+    public static void register(String command, int argPos, Supplier<Set<String>> results) {
         TabResult tabResult = new TabResult(command, argPos, results);
         if (tabResults.contains(tabResult))
             throw new IllegalArgumentException("TabResult already exists");
         tabResults.add(tabResult);
     }
 
-    public void register(String command, int argPos, String... results) {
+    public static void register(String command, int argPos, String... results) {
         TabResult tabResult = new TabResult(command, argPos, () -> new HashSet<>(Arrays.asList(results)));
         if (tabResults.contains(tabResult))
             throw new IllegalArgumentException("TabResult already exists");
@@ -38,7 +37,7 @@ public class TabCompleteHandler implements TabCompleter {
         Set<String> results = TabResult.getResults(args);
         // If no BaseCommand, match BaseCommands
         if (results == null) {
-            return new ArrayList<>(TabResult.match(args[0], commandHandler.getCommands(sender).stream().map(BaseCommand::getName).collect(Collectors.toSet())));
+            return new ArrayList<>(TabResult.match(args[0], CommandHandler.getCommands(sender).stream().map(BaseCommand::getName).collect(Collectors.toSet())));
         }
 
         // Return matching TabResult

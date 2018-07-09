@@ -1,4 +1,4 @@
-package com.johncorby.coreapi.util.eventconversations;
+package com.johncorby.coreapi.util.eventconversation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -7,7 +7,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.EventExecutor;
 
-import static com.johncorby.coreapi.CoreApiPlugin.plugin;
+import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
 
 public abstract class Listener<E extends Event> implements org.bukkit.event.Listener, EventExecutor {
     private final Class<E> event;
@@ -38,7 +38,7 @@ public abstract class Listener<E extends Event> implements org.bukkit.event.List
 
     public final void register() {
         unregister();
-        Bukkit.getPluginManager().registerEvent(event, this, priority, this, plugin, ignoreCancelled);
+        Bukkit.getPluginManager().registerEvent(event, this, priority, this, PLUGIN, ignoreCancelled);
     }
 
     public final void unregister() {

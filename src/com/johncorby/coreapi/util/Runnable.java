@@ -5,8 +5,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nullable;
 
-import static com.johncorby.coreapi.CoreApiPlugin.messageHandler;
-import static com.johncorby.coreapi.CoreApiPlugin.plugin;
+import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
 
 /**
  * Convenient version of BukkitRunnable
@@ -29,37 +28,37 @@ public abstract class Runnable implements java.lang.Runnable {
     @Nullable
     public final synchronized BukkitTask runTask() {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTask(plugin, this));
+        return setupTask(Bukkit.getScheduler().runTask(PLUGIN, this));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskAsynchronously() {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskAsynchronously(plugin, this));
+        return setupTask(Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, this));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskLater(final long delay) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskLater(plugin, this, delay));
+        return setupTask(Bukkit.getScheduler().runTaskLater(PLUGIN, this, delay));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskLaterAsynchronously(final long delay) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this, delay));
+        return setupTask(Bukkit.getScheduler().runTaskLaterAsynchronously(PLUGIN, this, delay));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskTimer(final long delay, final long period) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskTimer(plugin, this, delay, period));
+        return setupTask(Bukkit.getScheduler().runTaskTimer(PLUGIN, this, delay, period));
     }
 
     @Nullable
     public final synchronized BukkitTask runTaskTimerAsynchronously(final long delay, final long period) {
         if (checkNotScheduled()) return null;
-        return setupTask(Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this, delay, period));
+        return setupTask(Bukkit.getScheduler().runTaskTimerAsynchronously(PLUGIN, this, delay, period));
     }
 
     public final synchronized int getTaskId() {
@@ -72,7 +71,7 @@ public abstract class Runnable implements java.lang.Runnable {
             if (task == null)
                 throw new IllegalStateException("Not scheduled");
         } catch (Exception e) {
-            messageHandler.error(e);
+            MessageHandler.error(e);
             return true;
         }
         return false;
@@ -84,11 +83,11 @@ public abstract class Runnable implements java.lang.Runnable {
                 if (!task.isCancelled())
                     throw new IllegalStateException("Still running as task " + getTaskId());
                 else {
-                    messageHandler.debug("Cancelled task " + getTaskId());
+                    MessageHandler.debug("Cancelled task " + getTaskId());
                     cancel();
                 }
         } catch (Exception e) {
-            messageHandler.error(e);
+            MessageHandler.error(e);
             return true;
         }
         return false;
