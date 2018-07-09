@@ -52,7 +52,7 @@ public class CommandHandler implements CommandExecutor {
 
         // Get help for commands
         for (BaseCommand c : commands) {
-            MessageHandler.info(sender, "/virtualredstone " + c.getName() + " " + c.getUsage() + " - " + c.getDescription());
+            MessageHandler.info(sender, "/" + PLUGIN.getName().toLowerCase() + " " + c.getName() + " " + c.getUsage() + " - " + c.getDescription());
         }
     }
 
@@ -78,7 +78,7 @@ public class CommandHandler implements CommandExecutor {
 
         // If command not found or no permission: say so
         if (baseCommand == null || !baseCommand.hasPermission(player)) {
-            MessageHandler.error(player, "Command " + args[0] + " not found", "Do /virtualredstone for a list of commands");
+            MessageHandler.error(player, "Command " + args[0] + " not found", "Do /" + PLUGIN.getName().toLowerCase() + " for a list of commands");
             return false;
         }
 

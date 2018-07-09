@@ -21,6 +21,7 @@ public abstract class CoreApiPlugin extends JavaPlugin {
         new ListenerHandler(getListeners());
 
         MessageHandler.info(PLUGIN.getName() + " enabled");
+        MessageHandler.debug("Resource: " + getClass().getResource('/' + getClass().getName().replace('.', '/') + ".class"));
     }
 
     @Override
