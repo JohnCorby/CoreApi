@@ -1,7 +1,5 @@
 package com.johncorby.coreapi.util.storedclass;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,7 +15,6 @@ public abstract class Identifiable<I> extends StoredClass {
         create(identity);
     }
 
-    @Nullable
     protected static Identifiable get(Class<? extends Identifiable> clazz,
                                       Object identity) {
         Set<? extends Identifiable> identifiables = (Set<? extends Identifiable>) classes.get(clazz);

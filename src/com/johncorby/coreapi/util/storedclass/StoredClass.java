@@ -1,7 +1,6 @@
 package com.johncorby.coreapi.util.storedclass;
 
 import com.johncorby.coreapi.util.MessageHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -80,7 +79,6 @@ public abstract class StoredClass {
             implements Set<StoredClass> {
         private Map<Class<? extends StoredClass>, Set<? extends StoredClass>> map = new Hashtable<>();
 
-        @NotNull
         @Override
         public Iterator<StoredClass> iterator() {
             Set<StoredClass> s = new HashSet<>();

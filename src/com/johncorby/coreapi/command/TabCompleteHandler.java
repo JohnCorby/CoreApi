@@ -1,5 +1,6 @@
 package com.johncorby.coreapi.command;
 
+import com.johncorby.coreapi.CoreApiPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -8,14 +9,12 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
-
 public class TabCompleteHandler implements TabCompleter {
     private static Set<TabResult> tabResults = new HashSet<>();
 
     public TabCompleteHandler() {
         // Register tab completer
-        PLUGIN.getCommand(PLUGIN.getName()).setTabCompleter(this);
+        CoreApiPlugin.PLUGIN.getCommand(CoreApiPlugin.PLUGIN.getName()).setTabCompleter(this);
     }
 
     public static void register(String command, int argPos, Supplier<Set<String>> results) {

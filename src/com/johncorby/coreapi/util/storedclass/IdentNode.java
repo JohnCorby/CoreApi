@@ -1,7 +1,5 @@
 package com.johncorby.coreapi.util.storedclass;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 
 public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode> extends Identifiable<I> {
@@ -18,7 +16,6 @@ public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode> ext
 //        create(identity, null, children);
 //    }
 
-    @Nullable
     protected static IdentNode get(Class<? extends IdentNode> clazz,
                                    Object identity,
                                    IdentNode parent) {

@@ -1,5 +1,6 @@
 package com.johncorby.coreapi.command;
 
+import com.johncorby.coreapi.CoreApiPlugin;
 import com.johncorby.coreapi.util.MessageHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,7 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
 import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
 public class CommandHandler implements CommandExecutor {
@@ -19,7 +19,7 @@ public class CommandHandler implements CommandExecutor {
 
     public CommandHandler(BaseCommand... baseCommands) {
         // Register base command
-        PLUGIN.getCommand(PLUGIN.getName()).setExecutor(this);
+        CoreApiPlugin.PLUGIN.getCommand(CoreApiPlugin.PLUGIN.getName()).setExecutor(this);
 
         // Register BaseCommands
         register(new Reload());
@@ -52,7 +52,7 @@ public class CommandHandler implements CommandExecutor {
 
         // Get help for commands
         for (BaseCommand c : commands) {
-            MessageHandler.info(sender, "/" + PLUGIN.getName().toLowerCase() + " " + c.getName() + " " + c.getUsage() + " - " + c.getDescription());
+            MessageHandler.info(sender, "/" + CoreApiPlugin.PLUGIN.getName().toLowerCase() + " " + c.getName() + " " + c.getUsage() + " - " + c.getDescription());
         }
     }
 
@@ -78,7 +78,7 @@ public class CommandHandler implements CommandExecutor {
 
         // If command not found or no permission: say so
         if (baseCommand == null || !baseCommand.hasPermission(player)) {
-            MessageHandler.error(player, "Command " + args[0] + " not found", "Do /" + PLUGIN.getName().toLowerCase() + " for a list of commands");
+            MessageHandler.error(player, "Command " + args[0] + " not found", "Do /" + CoreApiPlugin.PLUGIN.getName().toLowerCase() + " for a list of commands");
             return false;
         }
 

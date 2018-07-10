@@ -1,9 +1,9 @@
 package com.johncorby.coreapi;
 
+import com.johncorby.coreapi.listener.ListenerHandler;
 import com.johncorby.coreapi.command.BaseCommand;
 import com.johncorby.coreapi.command.CommandHandler;
 import com.johncorby.coreapi.command.TabCompleteHandler;
-import com.johncorby.coreapi.listener.ListenerHandler;
 import com.johncorby.coreapi.util.MessageHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
