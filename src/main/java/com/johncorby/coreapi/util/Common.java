@@ -166,17 +166,21 @@ public class Common {
         private final Iterator<E> iterator;
         private final int itemsPerTick;
 
-        public RunnableIterator(List<E> items, int itemsPerTick) {
+        public RunnableIterator(E[] items, int itemsPerTick) {
+            this(Arrays.asList(items), itemsPerTick);
+        }
+
+        public RunnableIterator(Collection<E> items, int itemsPerTick) {
             iterator = items.iterator();
             this.itemsPerTick = itemsPerTick;
         }
 
-        public void go() {
+        public final void go() {
             runTaskTimer(0, 0);
         }
 
         @Override
-        public void run() {
+        public final void run() {
             for (int i = 0; i < itemsPerTick; i++) {
                 if (!iterator.hasNext()) {
                     cancel();

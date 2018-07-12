@@ -10,7 +10,7 @@ import static org.bukkit.Bukkit.getServer;
 
 public class Reload extends BaseCommand {
     Reload() {
-        super("Reload the PLUGIN", "", PERM_ADMIN);
+        super("Reload the plugin", "", PERM_ADMIN);
     }
 
     @Override
