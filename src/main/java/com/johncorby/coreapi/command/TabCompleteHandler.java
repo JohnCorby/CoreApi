@@ -4,13 +4,14 @@ import com.johncorby.coreapi.CoreApiPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class TabCompleteHandler implements TabCompleter {
-    private static Set<TabResult> tabResults = new HashSet<>();
+    private static final Set<TabResult> tabResults = new HashSet<>();
 
     public TabCompleteHandler() {
         // Register tab completer
@@ -31,8 +32,9 @@ public class TabCompleteHandler implements TabCompleter {
         tabResults.add(tabResult);
     }
 
+    @NotNull
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, Command command, String alias, @NotNull String[] args) {
         Set<String> results = TabResult.getResults(args);
         // If no BaseCommand, match BaseCommands
         if (results == null) {
@@ -44,9 +46,9 @@ public class TabCompleteHandler implements TabCompleter {
     }
 
     private static class TabResult {
-        private String command;
-        private int argPos;
-        private Supplier<Set<String>> results;
+        private final String command;
+        private final int argPos;
+        private final Supplier<Set<String>> results;
         //private List<String> results;
 
         private TabResult(String command, int argPos, Supplier<Set<String>> results) {
@@ -64,7 +66,8 @@ public class TabCompleteHandler implements TabCompleter {
         }
 
         // Match partial to from
-        private static Set<String> match(String partial, Set<String> from) {
+        @NotNull
+        private static Set<String> match(@NotNull String partial, Set<String> from) {
             if (from.isEmpty() || partial.isEmpty()) return from;
 
             Set<String> matches = new HashSet<>();

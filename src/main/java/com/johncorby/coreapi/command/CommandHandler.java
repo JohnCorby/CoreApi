@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
 public class CommandHandler implements CommandExecutor {
-    public static Set<BaseCommand> commands = new HashSet<>();
+    public static final Set<BaseCommand> commands = new HashSet<>();
 
     public CommandHandler(BaseCommand... baseCommands) {
         // Register base command
@@ -33,7 +34,7 @@ public class CommandHandler implements CommandExecutor {
     }
 
     // Get commands
-    public static Set<BaseCommand> getCommands(CommandSender who) {
+    public static Set<BaseCommand> getCommands(@NotNull CommandSender who) {
         return commands.stream().filter(c -> c.hasPermission(who)).collect(Collectors.toSet());
     }
 
@@ -43,7 +44,7 @@ public class CommandHandler implements CommandExecutor {
         return null;
     }
 
-    private static void getHelp(Player sender, BaseCommand... commands) {
+    private static void getHelp(@NotNull Player sender, BaseCommand... commands) {
         // Filter out non-perm commands
         commands = Arrays.stream(commands).filter(baseCommand -> baseCommand.hasPermission(sender)).toArray(BaseCommand[]::new);
 

@@ -1,5 +1,7 @@
 package com.johncorby.coreapi.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 /**
@@ -25,6 +27,7 @@ public class Tuple<A, B> {
         return Objects.equals(a, t.a) && Objects.equals(b, t.b);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Tuple<" + a + ", " + b + ">@" + Integer.toHexString(hashCode());

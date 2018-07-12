@@ -3,8 +3,7 @@ package com.johncorby.coreapi.util;
 import com.johncorby.coreapi.CoreApiPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Convenient version of BukkitRunnable
@@ -12,6 +11,7 @@ import javax.annotation.Nullable;
  * It also won't throw exceptions :)))
  */
 public abstract class Runnable implements java.lang.Runnable {
+    @Nullable
     private BukkitTask task;
 
     public final synchronized boolean isCancelled() {
@@ -24,37 +24,31 @@ public abstract class Runnable implements java.lang.Runnable {
         task = null;
     }
 
-    @Nullable
     public final synchronized BukkitTask runTask() {
         if (checkNotScheduled()) return null;
         return setupTask(Bukkit.getScheduler().runTask(CoreApiPlugin.PLUGIN, this));
     }
 
-    @Nullable
     public final synchronized BukkitTask runTaskAsynchronously() {
         if (checkNotScheduled()) return null;
         return setupTask(Bukkit.getScheduler().runTaskAsynchronously(CoreApiPlugin.PLUGIN, this));
     }
 
-    @Nullable
     public final synchronized BukkitTask runTaskLater(final long delay) {
         if (checkNotScheduled()) return null;
         return setupTask(Bukkit.getScheduler().runTaskLater(CoreApiPlugin.PLUGIN, this, delay));
     }
 
-    @Nullable
     public final synchronized BukkitTask runTaskLaterAsynchronously(final long delay) {
         if (checkNotScheduled()) return null;
         return setupTask(Bukkit.getScheduler().runTaskLaterAsynchronously(CoreApiPlugin.PLUGIN, this, delay));
     }
 
-    @Nullable
     public final synchronized BukkitTask runTaskTimer(final long delay, final long period) {
         if (checkNotScheduled()) return null;
         return setupTask(Bukkit.getScheduler().runTaskTimer(CoreApiPlugin.PLUGIN, this, delay, period));
     }
 
-    @Nullable
     public final synchronized BukkitTask runTaskTimerAsynchronously(final long delay, final long period) {
         if (checkNotScheduled()) return null;
         return setupTask(Bukkit.getScheduler().runTaskTimerAsynchronously(CoreApiPlugin.PLUGIN, this, delay, period));

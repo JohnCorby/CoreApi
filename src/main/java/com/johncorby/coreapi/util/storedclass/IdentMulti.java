@@ -1,5 +1,7 @@
 package com.johncorby.coreapi.util.storedclass;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Set;
 
@@ -14,9 +16,9 @@ public abstract class IdentMulti extends StoredClass {
         create(identities);
     }
 
-    protected static IdentMulti get(Class<? extends IdentMulti> clazz,
+    protected static IdentMulti get(@NotNull Class<? extends IdentMulti> clazz,
                                     Object... identities) {
-        Set<? extends IdentMulti> identifiables = (Set<? extends IdentMulti>) classes.get(clazz);
+        Set<? extends IdentMulti> identifiables = classes.get(clazz);
         if (identifiables == null) return null;
         for (IdentMulti i : identifiables)
             if (Arrays.equals(i.get(), identities)) return i;
@@ -50,13 +52,14 @@ public abstract class IdentMulti extends StoredClass {
         return -1;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return getClass().getSimpleName() + "<" + Arrays.toString(identities) + ">";
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@NotNull Object obj) {
         if (!getClass().equals(obj.getClass())) return false;
         IdentMulti i = (IdentMulti) obj;
         return Arrays.equals(identities, i.identities);

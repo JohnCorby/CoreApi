@@ -4,6 +4,8 @@ import com.johncorby.coreapi.util.storedclass.Identifiable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,7 @@ import java.util.Map;
  * I'm hella gay
  */
 public class EventConversation extends Identifiable<Player> implements Listener {
+    @Nullable
     protected EventPrompt currentPrompt;
     Map<Object, Object> sessionData;
     private EventPrompt firstPrompt;
@@ -21,8 +24,9 @@ public class EventConversation extends Identifiable<Player> implements Listener 
         super(forWhom);
     }
 
+    @Nullable
     public static EventConversation get(Player identity) {
-        return (EventConversation) get(EventConversation.class, identity);
+        return get(EventConversation.class, identity);
     }
 
     @Override
@@ -81,6 +85,7 @@ public class EventConversation extends Identifiable<Player> implements Listener 
         }
     }
 
+    @NotNull
     public ConversationState getState() {
         if (currentPrompt != null) {
             return ConversationState.STARTED;

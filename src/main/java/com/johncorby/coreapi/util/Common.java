@@ -1,5 +1,8 @@
 package com.johncorby.coreapi.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.Runnable;
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -14,7 +17,7 @@ public class Common {
         return Arrays.asList(o);
     }
 
-    public static <T> T[] toArray(List<T> l, T[] i) {
+    public static <T> T[] toArray(List<T> l, @NotNull T[] i) {
         return l.toArray(i);
     }
 
@@ -23,12 +26,12 @@ public class Common {
         return String.valueOf(o);
     }
 
-    public static <T> String[] toStr(T[] oa) {
+    public static <T> String[] toStr(@NotNull T[] oa) {
         return Arrays.stream(oa).map(Common::toStr).toArray(String[]::new);
     }
 
     // Convert string to int
-    public static <T> List<String> toStr(List<T> ol) {
+    public static <T> List<String> toStr(@NotNull List<T> ol) {
         return map(ol, Common::toStr);
     }
 
@@ -40,17 +43,17 @@ public class Common {
         }
     }
 
-    public static <T> Integer[] toInt(T[] oa) {
+    public static <T> Integer[] toInt(@NotNull T[] oa) {
         return Arrays.stream(oa).map(Common::toInt).toArray(Integer[]::new);
     }
 
-    public static <T> List<Integer> toInt(List<T> ol) {
+    public static <T> List<Integer> toInt(@NotNull List<T> ol) {
         return map(ol, Common::toInt);
     }
 
     // Concat arrays/lists
     @SafeVarargs
-    public static <T> T[] concat(T[] instance, T[]... arrays) {
+    public static <T> T[] concat(@NotNull T[] instance, T[]... arrays) {
         assert arrays.length > 1;
         List<T> result = new ArrayList<>();
         for (T[] array : arrays) {
@@ -59,6 +62,7 @@ public class Common {
         return result.toArray(instance);
     }
 
+    @NotNull
     @SafeVarargs
     public static <T> List<T> concat(List<T>... lists) {
         assert lists.length > 1;
@@ -70,7 +74,7 @@ public class Common {
     }
 
     // Map list/array
-    public static <T, R> R[] map(T[] array, Function<? super T, ? extends R> function, R[] instance) {
+    public static <T, R> R[] map(@NotNull T[] array, Function<? super T, ? extends R> function, @NotNull R[] instance) {
         return toArray(Arrays.stream(array).map(function).collect(Collectors.toList()), instance);
     }
 
@@ -98,31 +102,32 @@ public class Common {
     }
 
     // String version of array with formatting
-    public static <T> String toStr(String s, T[] replacements) {
+    public static <T> String toStr(@NotNull String s, @NotNull T[] replacements) {
         //assert replacements.getClass().isArray();
         return String.format(s, (Object[]) toStr(replacements));
     }
 
     // Find property R of list E and return E that has property R
+    @Nullable
     public static <T, R> T find(T[] array, Function<? super T, ? extends R> function, R element) {
         return find(Arrays.asList(array), function, element);
     }
 
-    public static <T, R> T find(List<T> list, Function<? super T, ? extends R> function, R element) {
+    public static <T, R> T find(@NotNull List<T> list, Function<? super T, ? extends R> function, R element) {
         int i = map(list, function).indexOf(element);
         return i < 0 ? null : list.get(i);
     }
 
 
     // See if one list has an item from another
-    public static <T> boolean containsAny(Collection<T> collection1, Collection<T> collection2) {
+    public static <T> boolean containsAny(@NotNull Collection<T> collection1, Collection<T> collection2) {
         for (T e : collection2)
             if (collection1.contains(e)) return true;
         return false;
     }
 
     // Safely run something and catch exceptions
-    public static void run(Runnable action) {
+    public static void run(@NotNull Runnable action) {
         try {
             action.run();
         } catch (Exception e) {
@@ -130,7 +135,7 @@ public class Common {
         }
     }
 
-    public static <T> T run(Callable<T> action) {
+    public static <T> T run(@NotNull Callable<T> action) {
         try {
             return action.call();
         } catch (Exception e) {
@@ -146,7 +151,7 @@ public class Common {
         return System.currentTimeMillis() - t;
     }
 
-    public static boolean isThrown(Runnable action, Exception exception) {
+    public static boolean isThrown(@NotNull Runnable action, @NotNull Exception exception) {
         try {
             action.run();
         } catch (Exception e) {
@@ -157,8 +162,9 @@ public class Common {
 
     // Iterate through items "async" using Runnables
     public static abstract class RunnableIterator<E> extends com.johncorby.coreapi.util.Runnable implements Consumer<E> {
-        private Iterator<E> iterator;
-        private int itemsPerTick;
+        @NotNull
+        private final Iterator<E> iterator;
+        private final int itemsPerTick;
 
         public RunnableIterator(List<E> items, int itemsPerTick) {
             iterator = items.iterator();

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -54,5 +55,6 @@ public abstract class ListenerWithMessage<E extends Event> implements Listener, 
         recipient.apply(e).sendRawMessage(execute(e));
     }
 
+    @NotNull
     public abstract String execute(E event) throws EventException;
 }

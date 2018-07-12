@@ -1,5 +1,7 @@
 package com.johncorby.coreapi.util.storedclass;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,11 +17,11 @@ public abstract class Identifiable<I> extends StoredClass {
         create(identity);
     }
 
-    protected static Identifiable get(Class<? extends Identifiable> clazz,
-                                      Object identity) {
-        Set<? extends Identifiable> identifiables = (Set<? extends Identifiable>) classes.get(clazz);
+    protected static <I extends Identifiable> I get(Class<I> clazz,
+                                                    Object identity) {
+        Set<I> identifiables = classes.get(clazz);
         if (identifiables == null) return null;
-        for (Identifiable i : identifiables)
+        for (I i : identifiables)
             if (i.get().equals(identity)) return i;
         //throw new IllegalStateException(clazz.getSimpleName() + "<" + identity + "> doesn't exist");
         return null;
@@ -55,7 +57,7 @@ public abstract class Identifiable<I> extends StoredClass {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@NotNull Object obj) {
         if (!getClass().equals(obj.getClass())) return false;
         Identifiable i = (Identifiable) obj;
         return Objects.equals(identity, i.identity);

@@ -1,13 +1,14 @@
 package com.johncorby.coreapi;
 
-import com.johncorby.coreapi.listener.ListenerHandler;
 import com.johncorby.coreapi.command.BaseCommand;
 import com.johncorby.coreapi.command.CommandHandler;
 import com.johncorby.coreapi.command.TabCompleteHandler;
+import com.johncorby.coreapi.listener.ListenerHandler;
 import com.johncorby.coreapi.util.MessageHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class CoreApiPlugin extends JavaPlugin {
     public static CoreApiPlugin PLUGIN;
@@ -31,9 +32,12 @@ public abstract class CoreApiPlugin extends JavaPlugin {
         MessageHandler.info(PLUGIN.getName() + " disabled");
     }
 
+    @NotNull
     public abstract String getMessagePrefix();
 
+    @NotNull
     public abstract BaseCommand[] getCommands();
 
+    @NotNull
     public abstract Listener[] getListeners();
 }

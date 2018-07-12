@@ -1,6 +1,8 @@
 package com.johncorby.coreapi.util.storedclass;
 
 import com.johncorby.coreapi.util.MessageHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -17,6 +19,7 @@ public abstract class StoredClass {
         create();
     }
 
+    @NotNull
     public static ClassSet getClasses() {
         return classes;
     }
@@ -67,6 +70,7 @@ public abstract class StoredClass {
         MessageHandler.logP(DEBUG, toString(), msgs);
     }
 
+    @NotNull
     public List<String> getDebug() {
         List<String> r = new ArrayList<>();
         r.add(toString());
@@ -77,7 +81,7 @@ public abstract class StoredClass {
     public static final class ClassSet
             extends AbstractSet<StoredClass>
             implements Set<StoredClass> {
-        private Map<Class<? extends StoredClass>, Set<? extends StoredClass>> map = new Hashtable<>();
+        private final Map<Class<? extends StoredClass>, Set<? extends StoredClass>> map = new Hashtable<>();
 
         @Override
         public Iterator<StoredClass> iterator() {
@@ -105,7 +109,7 @@ public abstract class StoredClass {
 
         @Override
         public boolean add(StoredClass storedClass) {
-            Set<StoredClass> s = (Set<StoredClass>) get(storedClass.getClass());
+            Set<StoredClass> s = get((Class<StoredClass>) storedClass.getClass());
             if (s == null) s = new HashSet<>();
 
             boolean ret = s.add(storedClass);
@@ -133,8 +137,9 @@ public abstract class StoredClass {
             map.clear();
         }
 
-        public Set<? extends StoredClass> get(Class<? extends StoredClass> clazz) {
-            return map.get(clazz);
+        @Nullable
+        public <C extends StoredClass> Set<C> get(Class<C> clazz) {
+            return (Set<C>) map.get(clazz);
         }
     }
 }

@@ -9,6 +9,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -61,7 +63,7 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
         conversation.acceptInput(event);
     }
 
-    EventPrompt acceptInput(E input) {
+    @Nullable EventPrompt acceptInput(E input) {
         // Don't do anything if event is not for us
         if (!playerGetter.apply(input).equals(getForWhom())) return this;
 
@@ -78,11 +80,14 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
         }
     }
 
+    @NotNull
     protected abstract String getPromptText();
 
     protected abstract boolean isInputValid(E input);
 
+    @Nullable
     protected abstract String getInvalidInputText(E input);
 
+    @Nullable
     protected abstract EventPrompt acceptValidInput(E input);
 }
