@@ -1,133 +1,179 @@
 package com.johncorby.coreapi.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.lang.Runnable;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Common {
-    // Convert array to list and vice versa
-    public static <T> List<T> toList(T[] o) {
-        return Arrays.asList(o);
+    // Convert lists/sets/arrays
+    public static <T> List<T> toList(T[] ta) {
+        return Arrays.asList(ta);
     }
 
-    public static <T> T[] toArray(List<T> l, @NotNull T[] i) {
-        return l.toArray(i);
+    public static <T> List<T> toList(Collection<T> tc) {
+        return new ArrayList<>(tc);
     }
 
-    // Convert object to string
-    public static <T> String toStr(T o) {
-        return String.valueOf(o);
+    public static <T> List<T> toList(Stream<T> ts) {
+        return ts.collect(Collectors.toList());
     }
 
-    public static <T> String[] toStr(@NotNull T[] oa) {
-        return Arrays.stream(oa).map(Common::toStr).toArray(String[]::new);
+    public static <T> Set<T> toSet(T[] ta) {
+        return toSet(toList(ta));
     }
 
-    // Convert string to int
-    public static <T> List<String> toStr(@NotNull List<T> ol) {
-        return map(ol, Common::toStr);
+    public static <T> Set<T> toSet(Collection<T> tc) {
+        return new HashSet<>(tc);
     }
 
-    public static <T> Integer toInt(T o) {
+    public static <T> Set<T> toSet(Stream<T> ts) {
+        return ts.collect(Collectors.toSet());
+    }
+
+    public static <T> T[] toArray(T[] type, Collection<T> tc) {
+        return tc.toArray(type);
+    }
+
+    public static <T> T[] toArray(T[] type, Stream<T> ts) {
+        return toList(ts).toArray(type);
+    }
+
+    public static <T> Stream<T> toStream(T[] ta) {
+        return Arrays.stream(ta);
+    }
+
+    public static <T> Stream<T> toStream(Collection<T> tc) {
+        return tc.stream();
+    }
+
+
+    // Convert T to string
+    public static <T> String toStr(T t) {
+        return String.valueOf(t);
+    }
+
+    public static <T> String[] toStr(T[] ta) {
+        return toStr(toList(ta)).toArray(new String[0]);
+    }
+
+    public static <T> Collection<String> toStr(Collection<T> tc) {
+        return map(tc, Common::toStr);
+    }
+
+
+    // Convert T to int
+    public static <T> Integer toInt(T t) {
         try {
-            return Integer.parseInt(toStr(o));
+            return Integer.parseInt(toStr(t));
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
-    public static <T> Integer[] toInt(@NotNull T[] oa) {
-        return Arrays.stream(oa).map(Common::toInt).toArray(Integer[]::new);
+    public static <T> Integer[] toInt(T[] ta) {
+        return toInt(toList(ta)).toArray(new Integer[0]);
     }
 
-    public static <T> List<Integer> toInt(@NotNull List<T> ol) {
-        return map(ol, Common::toInt);
+    public static <T> Collection<Integer> toInt(Collection<T> tc) {
+        return map(tc, Common::toInt);
     }
 
-    // Concat arrays/lists
-    @SafeVarargs
-    public static <T> T[] concat(@NotNull T[] instance, T[]... arrays) {
-        assert arrays.length > 1;
-        List<T> result = new ArrayList<>();
-        for (T[] array : arrays) {
-            result.addAll(Arrays.asList(array));
-        }
-        return result.toArray(instance);
+
+    // Map collection/array
+    public static <T, R> R[] map(R[] type, T[] array, Function<? super T, ? extends R> function) {
+        return toArray(type, map(toList(array), function));
     }
 
-    @NotNull
-    @SafeVarargs
-    public static <T> List<T> concat(List<T>... lists) {
-        assert lists.length > 1;
-        List<T> result = new ArrayList<>();
-        for (List<T> list : lists) {
-            result.addAll(list);
-        }
-        return result;
+    public static <T, R> Collection<R> map(Collection<T> collection, Function<? super T, ? extends R> function) {
+        return toList(toStream(collection).map(function));
     }
 
-    // Map list/array
-    public static <T, R> R[] map(@NotNull T[] array, Function<? super T, ? extends R> function, @NotNull R[] instance) {
-        return toArray(Arrays.stream(array).map(function).collect(Collectors.toList()), instance);
+
+    // Filter collection/array
+    public static <T> T[] filter(T[] array, Predicate<? super T> predicate) {
+        return toArray(array, filter(toList(array), predicate));
     }
 
-    public static <T, R> List<R> map(List<T> list, Function<? super T, ? extends R> function) {
-        return list.stream().map(function).collect(Collectors.toList());
+    public static <T> Collection<T> filter(Collection<T> collection, Predicate<? super T> predicate) {
+        return toList(toStream(collection).filter(predicate));
     }
+
+
+    // Find property R of list T and return T that has property R
+    public static <T, R> T find(T[] array, Function<? super T, ? extends R> function, R element) {
+        return find(toList(array), function, element);
+    }
+
+    public static <T, R> T find(List<T> list, Function<? super T, ? extends R> function, R element) {
+        int i = toList(map(list, function)).indexOf(element);
+        return i < 0 ? null : list.get(i);
+    }
+
+
+    // See if one collection has an element from another
+    public static <T> boolean containsAny(T[] array1, T[] array2) {
+        return containsAny(toList(array1), toList(array2));
+    }
+
+    public static <T> boolean containsAny(Collection<T> collection1, Collection<T> collection2) {
+        for (T t : collection2)
+            if (collection1.contains(t)) return true;
+        return false;
+    }
+
 
     // Get a random int from min to max, inclusive
     public static int randInt(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
+
     // Gets random element from array/list
     public static <T> T randChoice(T[] array) {
         return array[randInt(0, array.length - 1)];
     }
 
-    public static <T> T randChoice(List<T> array) {
-        return array.get(randInt(0, array.size() - 1));
+    public static <T> T randChoice(List<T> list) {
+        return list.get(randInt(0, list.size() - 1));
     }
 
-    // Check if string is int
-    public static boolean isInt(String s) {
-        return toInt(s) != null;
+
+    // Concat arrays/collections
+    @SafeVarargs
+    public static <T> T[] concat(T[] type, T[]... arrays) {
+        assert arrays.length > 1;
+        Collection<T> result = new ArrayList<>();
+        for (T[] array : arrays)
+            result.addAll(toList(array));
+        return result.toArray(type);
     }
+
+    @SafeVarargs
+    public static <T> Collection<T> concat(Collection<T>... collections) {
+        assert collections.length > 1;
+        Collection<T> result = new ArrayList<>();
+        for (Collection<T> collection : collections) {
+            result.addAll(collection);
+        }
+        return result;
+    }
+
 
     // String version of array with formatting
-    public static <T> String toStr(@NotNull String s, @NotNull T[] replacements) {
-        //assert replacements.getClass().isArray();
-        return String.format(s, (Object[]) toStr(replacements));
-    }
-
-    // Find property R of list E and return E that has property R
-    @Nullable
-    public static <T, R> T find(T[] array, Function<? super T, ? extends R> function, R element) {
-        return find(Arrays.asList(array), function, element);
-    }
-
-    public static <T, R> T find(@NotNull List<T> list, Function<? super T, ? extends R> function, R element) {
-        int i = map(list, function).indexOf(element);
-        return i < 0 ? null : list.get(i);
+    @SafeVarargs
+    public static <T> String format(String s, T... replacements) {
+        return String.format(s, (Object[]) replacements);
     }
 
 
-    // See if one list has an item from another
-    public static <T> boolean containsAny(@NotNull Collection<T> collection1, Collection<T> collection2) {
-        for (T e : collection2)
-            if (collection1.contains(e)) return true;
-        return false;
-    }
-
-    // Safely run something and catch exceptions
-    public static void run(@NotNull Runnable action) {
+    // Safely run something and catch/print exceptions
+    public static void run(Runnable action) {
         try {
             action.run();
         } catch (Exception e) {
@@ -135,7 +181,7 @@ public class Common {
         }
     }
 
-    public static <T> T run(@NotNull Callable<T> action) {
+    public static <T> T run(Callable<T> action) {
         try {
             return action.call();
         } catch (Exception e) {
@@ -144,6 +190,7 @@ public class Common {
         }
     }
 
+
     // Time something
     public static long time(Runnable action) {
         long t = System.currentTimeMillis();
@@ -151,7 +198,9 @@ public class Common {
         return System.currentTimeMillis() - t;
     }
 
-    public static boolean isThrown(@NotNull Runnable action, @NotNull Exception exception) {
+
+    // Check if an exception is thrown
+    public static boolean isThrown(Runnable action, Exception exception) {
         try {
             action.run();
         } catch (Exception e) {
@@ -160,18 +209,18 @@ public class Common {
         return false;
     }
 
+
     // Iterate through items "async" using Runnables
-    public static abstract class RunnableIterator<E> extends com.johncorby.coreapi.util.Runnable implements Consumer<E> {
-        @NotNull
-        private final Iterator<E> iterator;
+    public static abstract class RunnableIterator<T> extends com.johncorby.coreapi.util.Runnable implements Consumer<T> {
+        private final Iterator<T> iterator;
         private final int itemsPerTick;
 
-        public RunnableIterator(E[] items, int itemsPerTick) {
-            this(Arrays.asList(items), itemsPerTick);
+        public RunnableIterator(T[] elements, int itemsPerTick) {
+            this(toList(elements), itemsPerTick);
         }
 
-        public RunnableIterator(Collection<E> items, int itemsPerTick) {
-            iterator = items.iterator();
+        public RunnableIterator(Collection<T> elements, int itemsPerTick) {
+            iterator = elements.iterator();
             this.itemsPerTick = itemsPerTick;
         }
 

@@ -4,68 +4,54 @@ import com.johncorby.coreapi.util.storedclass.Identifiable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * I'm hella gay
+ * Like the conversation api but works with events
  */
 public class EventConversation extends Identifiable<Player> implements Listener {
-    @Nullable
-    protected EventPrompt currentPrompt;
-    Map<Object, Object> sessionData;
-    private EventPrompt firstPrompt;
+    private EventPrompt firstPrompt, currentPrompt;
     private boolean abandoned;
 
     public EventConversation(Player forWhom) {
         super(forWhom);
     }
 
-    @Nullable
     public static EventConversation get(Player identity) {
         return get(EventConversation.class, identity);
     }
 
     @Override
-    protected boolean create(Player identity) {
-        sessionData = new HashMap<>();
-        return super.create(identity);
-    }
+    public boolean create() throws IllegalStateException {
+        if (!super.create()) return false;
 
-    @Override
-    public boolean dispose() {
-        if (!stored()) return false;
-        abandon();
-        return super.dispose();
-    }
-
-    public void begin() throws IllegalStateException {
-        if (!exists())
-            throw new IllegalStateException(this + " doesn't exist");
         if (firstPrompt == null)
-            throw new IllegalStateException(this + " doens't have firstPrompt");
+            throw new IllegalStateException(this + " doesn't have first prompt");
         if (currentPrompt == null) {
             abandoned = false;
             currentPrompt = firstPrompt;
             outputNextPrompt();
         }
+
+        return true;
     }
 
-    public synchronized void abandon() throws IllegalStateException {
-        if (!exists())
-            throw new IllegalStateException(this + " doesn't exist");
-        if (currentPrompt == null) {
-            abandoned = true;
-            return;
-        }
+    @Override
+    public boolean dispose() {
+        if (!super.dispose()) return false;
+
+        abandoned = currentPrompt == null;
         if (!abandoned) {
             abandoned = true;
             currentPrompt.unregister();
             currentPrompt = null;
         }
+
+        return true;
+    }
+
+    public void setFirstPrompt(EventPrompt firstPrompt) {
+        if (currentPrompt != null) return;
+        this.firstPrompt = firstPrompt;
     }
 
     void acceptInput(Event input) {
@@ -77,38 +63,10 @@ public class EventConversation extends Identifiable<Player> implements Listener 
     }
 
     private void outputNextPrompt() {
-        if (currentPrompt == null) {
-            abandon();
-        } else {
+        if (currentPrompt == null) dispose();
+        else {
             currentPrompt.register();
             get().sendRawMessage(currentPrompt.getPromptText());
         }
-    }
-
-    @NotNull
-    public ConversationState getState() {
-        if (currentPrompt != null) {
-            return ConversationState.STARTED;
-        } else if (abandoned) {
-            return ConversationState.ABANDONED;
-        } else {
-            return ConversationState.UNSTARTED;
-        }
-    }
-
-    public void setFirstPrompt(EventPrompt firstPrompt) {
-        if (currentPrompt != null) return;
-        this.firstPrompt = firstPrompt;
-    }
-
-    public void setInitialSessionData(Map<Object, Object> initialSessionData) {
-        if (currentPrompt != null) return;
-        sessionData = initialSessionData;
-    }
-
-    public enum ConversationState {
-        UNSTARTED,
-        STARTED,
-        ABANDONED
     }
 }

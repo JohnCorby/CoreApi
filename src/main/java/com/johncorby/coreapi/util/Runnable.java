@@ -1,17 +1,16 @@
 package com.johncorby.coreapi.util;
 
 import com.johncorby.coreapi.CoreApiPlugin;
+import com.johncorby.coreapi.PrintObject;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Convenient version of BukkitRunnable
  * Unlike BukkitRunnable, you can run it again after it's cancelled
  * It also won't throw exceptions :)))
  */
-public abstract class Runnable implements java.lang.Runnable {
-    @Nullable
+public abstract class Runnable implements java.lang.Runnable, PrintObject {
     private BukkitTask task;
 
     public final synchronized boolean isCancelled() {

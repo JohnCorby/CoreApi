@@ -9,8 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -39,14 +37,6 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
         return conversation.get();
     }
 
-    protected final Object getSessionData(Object key) {
-        return conversation.sessionData.get(key);
-    }
-
-    protected final void setSessionData(Object key, Object value) {
-        conversation.sessionData.put(key, value);
-    }
-
     public final void register() {
         unregister();
         Bukkit.getPluginManager().registerEvent(event, conversation, priority, this, CoreApiPlugin.PLUGIN, ignoreCancelled);
@@ -59,11 +49,10 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
 
     @Override
     public void execute(Listener listener, Event event) {
-        conversation.debug("execute");
         conversation.acceptInput(event);
     }
 
-    @Nullable EventPrompt acceptInput(E input) {
+    EventPrompt acceptInput(E input) {
         // Don't do anything if event is not for us
         if (!playerGetter.apply(input).equals(getForWhom())) return this;
 
@@ -71,6 +60,7 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
             unregister();
             return acceptValidInput(input);
         } else {
+            // Send fail text
             String failMessage = getInvalidInputText(input);
             if (failMessage != null)
                 getForWhom().sendRawMessage(ChatColor.RED + failMessage);
@@ -80,14 +70,14 @@ public abstract class EventPrompt<E extends Event> implements Listener, EventExe
         }
     }
 
-    @NotNull
+
     protected abstract String getPromptText();
 
     protected abstract boolean isInputValid(E input);
 
-    @Nullable
+
     protected abstract String getInvalidInputText(E input);
 
-    @Nullable
+
     protected abstract EventPrompt acceptValidInput(E input);
 }

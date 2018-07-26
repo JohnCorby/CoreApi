@@ -6,13 +6,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import static com.johncorby.coreapi.util.Common.filter;
+import static com.johncorby.coreapi.util.Common.toSet;
 import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
 public class CommandHandler implements CommandExecutor {
@@ -34,8 +34,8 @@ public class CommandHandler implements CommandExecutor {
     }
 
     // Get commands
-    public static Set<BaseCommand> getCommands(@NotNull CommandSender who) {
-        return commands.stream().filter(c -> c.hasPermission(who)).collect(Collectors.toSet());
+    public static Set<BaseCommand> getCommands(CommandSender who) {
+        return toSet(filter(commands, c -> c.hasPermission(who)));
     }
 
     public static BaseCommand getCommand(String name) {
@@ -44,9 +44,9 @@ public class CommandHandler implements CommandExecutor {
         return null;
     }
 
-    private static void getHelp(@NotNull Player sender, BaseCommand... commands) {
+    private static void getHelp(Player sender, BaseCommand... commands) {
         // Filter out non-perm commands
-        commands = Arrays.stream(commands).filter(baseCommand -> baseCommand.hasPermission(sender)).toArray(BaseCommand[]::new);
+        commands = filter(commands, c -> c.hasPermission(sender));
 
         // Header
         MessageHandler.info(sender, "----- Help for commands -----");

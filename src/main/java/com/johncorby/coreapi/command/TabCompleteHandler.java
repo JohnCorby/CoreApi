@@ -1,12 +1,15 @@
 package com.johncorby.coreapi.command;
 
 import com.johncorby.coreapi.CoreApiPlugin;
+import com.johncorby.coreapi.util.Common;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -26,15 +29,15 @@ public class TabCompleteHandler implements TabCompleter {
     }
 
     public static void register(String command, int argPos, String... results) {
-        TabResult tabResult = new TabResult(command, argPos, () -> new HashSet<>(Arrays.asList(results)));
+        TabResult tabResult = new TabResult(command, argPos, () -> Common.toSet(results));
         if (tabResults.contains(tabResult))
             throw new IllegalArgumentException("TabResult already exists");
         tabResults.add(tabResult);
     }
 
-    @NotNull
+
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, Command command, String alias, @NotNull String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         Set<String> results = TabResult.getResults(args);
         // If no BaseCommand, match BaseCommands
         if (results == null) {
@@ -66,8 +69,8 @@ public class TabCompleteHandler implements TabCompleter {
         }
 
         // Match partial to from
-        @NotNull
-        private static Set<String> match(@NotNull String partial, Set<String> from) {
+
+        private static Set<String> match(String partial, Set<String> from) {
             if (from.isEmpty() || partial.isEmpty()) return from;
 
             Set<String> matches = new HashSet<>();

@@ -3,7 +3,6 @@ package com.johncorby.coreapi.util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -11,18 +10,18 @@ import java.util.logging.Level;
 import static com.johncorby.coreapi.util.MessageHandler.MessageType.*;
 
 public class MessageHandler {
-    private static String prefix;
+    public static String prefix;
 
     public MessageHandler(String prefix) {
         MessageHandler.prefix = prefix;
     }
 
     // Message of type to player
-    private static void msg(@NotNull CommandSender to, @NotNull MessageType type, Object... messages) {
+    public static void msg(CommandSender to, MessageType type, Object... messages) {
         msgP(to, type, "", messages);
     }
 
-    private static void msgP(@NotNull CommandSender to, @NotNull MessageType type, @NotNull String prefix, Object... messages) {
+    public static void msgP(CommandSender to, MessageType type, String prefix, Object... messages) {
         for (Object message : messages) {
             if (message instanceof Object[]) message = Arrays.deepToString((Object[]) message);
             String string = String.valueOf(message);
@@ -41,11 +40,11 @@ public class MessageHandler {
     }
 
     // Log of type to console
-    private static void log(@NotNull MessageType type, Object... messages) {
+    public static void log(MessageType type, Object... messages) {
         logP(type, "", messages);
     }
 
-    public static void logP(@NotNull MessageType type, @NotNull String prefix, Object... messages) {
+    public static void logP(MessageType type, String prefix, Object... messages) {
         msgP(Bukkit.getConsoleSender(), type, prefix, messages);
     }
 
@@ -66,19 +65,19 @@ public class MessageHandler {
         log(DEBUG, msgs);
     }
 
-    public static void info(@NotNull CommandSender to, Object... msgs) {
+    public static void info(CommandSender to, Object... msgs) {
         msg(to, INFO, msgs);
     }
 
-    public static void warn(@NotNull CommandSender to, Object... msgs) {
+    public static void warn(CommandSender to, Object... msgs) {
         msg(to, WARN, msgs);
     }
 
-    public static void error(@NotNull CommandSender to, Object... msgs) {
+    public static void error(CommandSender to, Object... msgs) {
         msg(to, ERROR, msgs);
     }
 
-    public static void debug(@NotNull CommandSender to, Object... msgs) {
+    public static void debug(CommandSender to, Object... msgs) {
         msg(to, DEBUG, msgs);
     }
 

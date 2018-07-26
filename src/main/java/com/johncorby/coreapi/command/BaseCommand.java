@@ -3,7 +3,6 @@ package com.johncorby.coreapi.command;
 import com.johncorby.coreapi.CoreApiPlugin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseCommand {
     protected static final String PERM_ADMIN = CoreApiPlugin.PLUGIN.getName() + ".admin";
@@ -31,7 +30,7 @@ public abstract class BaseCommand {
         return usage;
     }
 
-    public final boolean hasPermission(@NotNull CommandSender sender) {
+    public final boolean hasPermission(CommandSender sender) {
         return permission.isEmpty() || sender.isOp() || sender.hasPermission(permission);
     }
 }
