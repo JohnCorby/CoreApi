@@ -1,8 +1,10 @@
 package com.johncorby.coreapi.util.storedclass;
 
 import com.johncorby.coreapi.util.Runnable;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class IdentTask<I> extends Identifiable<I> {
+    @NotNull
     protected Task task = new Task();
 
     public IdentTask(I identity) {

@@ -1,9 +1,11 @@
 package com.johncorby.coreapi.util;
 
 import com.johncorby.coreapi.CoreApiPlugin;
-import com.johncorby.coreapi.PrintObject;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
 /**
  * Convenient version of BukkitRunnable
@@ -11,6 +13,7 @@ import org.bukkit.scheduler.BukkitTask;
  * It also won't throw exceptions :)))
  */
 public abstract class Runnable implements java.lang.Runnable, PrintObject {
+    @Nullable
     private BukkitTask task;
 
     public final synchronized boolean isCancelled() {
@@ -63,7 +66,7 @@ public abstract class Runnable implements java.lang.Runnable, PrintObject {
             if (task == null)
                 throw new IllegalStateException("Not scheduled");
         } catch (Exception e) {
-            MessageHandler.error(e);
+            MessageHandler.error(getStackTrace(e));
             return true;
         }
         return false;
@@ -79,7 +82,7 @@ public abstract class Runnable implements java.lang.Runnable, PrintObject {
                     cancel();
                 }
         } catch (Exception e) {
-            MessageHandler.error(e);
+            MessageHandler.error(getStackTrace(e));
             return true;
         }
         return false;

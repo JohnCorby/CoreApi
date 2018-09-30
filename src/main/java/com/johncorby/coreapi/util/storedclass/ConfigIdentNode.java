@@ -6,15 +6,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ConfigIdent<I>
-        extends Identifiable<I>
+public abstract class ConfigIdentNode<I, P extends ConfigIdentNode, C extends IdentNode>
+        extends IdentNode<I, P, C>
         implements ConfigurationSerializable {
-    public ConfigIdent(I identity) {
-        super(identity);
+    public ConfigIdentNode(I identity, P parent) {
+        super(identity, parent);
     }
 
-    public ConfigIdent(@NotNull Map<String, Object> map) {
-        super(null);
+    public ConfigIdentNode(@NotNull Map<String, Object> map) {
+        super(null, null);
         deserialize(map);
         create();
     }
@@ -30,11 +30,13 @@ public abstract class ConfigIdent<I>
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("Identity", identity);
+        map.put("Parent", parent);
         return map;
     }
 
     public void deserialize(@NotNull Map<String, Object> map) {
         identity = (I) map.get("Identity");
+        parent = (P) map.get("Parent");
     }
 
     public abstract void configAdd();

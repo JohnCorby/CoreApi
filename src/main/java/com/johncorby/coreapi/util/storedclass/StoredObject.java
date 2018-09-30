@@ -1,23 +1,20 @@
 package com.johncorby.coreapi.util.storedclass;
 
-import com.johncorby.coreapi.PrintObject;
+import com.johncorby.coreapi.util.PrintObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 /**
- * Store classes to manage them
+ * Store objects to manage them
  */
 public abstract class StoredObject implements PrintObject {
-    private static final ClassSet classes = new ClassSet();
+    public static final ObjectSet objects = new ObjectSet();
     private boolean exists = false;
-
-    public static ClassSet getClasses() {
-        return classes;
-    }
 
     public boolean create() {
         if (stored()) return false;
-        classes.add(this);
+        objects.add(this);
         exists = true;
         debug("Created");
         return true;
@@ -25,7 +22,7 @@ public abstract class StoredObject implements PrintObject {
 
     public boolean dispose() {
         if (!stored()) return false;
-        classes.remove(this);
+        objects.remove(this);
         exists = false;
         debug("Disposed");
         return true;
@@ -36,16 +33,15 @@ public abstract class StoredObject implements PrintObject {
     }
 
     public final boolean stored() {
-        return classes.contains(this);
+        return objects.contains(this);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        dispose();
-        super.finalize();
+    protected final void assertExists() {
+        if (!exists())
+            throw new IllegalStateException(this + " doesn't exist");
     }
 
-    public static final class ClassSet
+    public static final class ObjectSet
             extends AbstractSet<StoredObject>
             implements Set<StoredObject> {
         private final Map<Class<? extends StoredObject>, Set<? extends StoredObject>> map = new Hashtable<>();
@@ -89,7 +85,6 @@ public abstract class StoredObject implements PrintObject {
             StoredObject storedObject = (StoredObject) o;
 
             Set<? extends StoredObject> s = get(storedObject.getClass());
-            if (s == null) return false;
 
             boolean ret = s.remove(storedObject);
             if (ret)
@@ -103,9 +98,15 @@ public abstract class StoredObject implements PrintObject {
             map.clear();
         }
 
-        public <O extends StoredObject> Set<O> get(Class<O> clazz) {
-            Set<O> os = (Set<O>) map.get(clazz);
-            return os == null ? new HashSet<>() : os;
+        // Get objects of type and objects of subclass of type
+        @NotNull
+        public <T extends StoredObject> Set<T> get(@NotNull Class<T> type) {
+            Set<T> set = new HashSet<>();
+            for (Map.Entry<Class<? extends StoredObject>, Set<? extends StoredObject>> entry : map.entrySet())
+                if (type.isAssignableFrom(entry.getKey())) set.addAll((Set<T>) entry.getValue());
+            return set;
+            //Set<T> ret = (Set<T>) map.get(type);
+            //return ret == null ? new HashSet<>() : ret;
         }
     }
 }

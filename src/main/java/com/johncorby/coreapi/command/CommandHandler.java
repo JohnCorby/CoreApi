@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class CommandHandler implements CommandExecutor {
     }
 
     // Get commands
-    public static Set<BaseCommand> getCommands(CommandSender who) {
+    public static Set<BaseCommand> getCommands(@NotNull CommandSender who) {
         return toSet(filter(commands, c -> c.hasPermission(who)));
     }
 
@@ -44,7 +45,7 @@ public class CommandHandler implements CommandExecutor {
         return null;
     }
 
-    private static void getHelp(Player sender, BaseCommand... commands) {
+    private static void getHelp(@NotNull Player sender, BaseCommand... commands) {
         // Filter out non-perm commands
         commands = filter(commands, c -> c.hasPermission(sender));
 

@@ -1,4 +1,4 @@
-package com.johncorby.coreapi;
+package com.johncorby.coreapi.util;
 
 import java.util.ArrayList;
 import java.util.List;

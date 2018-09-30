@@ -5,11 +5,9 @@ import com.johncorby.coreapi.util.Common;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -36,8 +34,9 @@ public class TabCompleteHandler implements TabCompleter {
     }
 
 
+    @NotNull
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, Command command, String alias, @NotNull String[] args) {
         Set<String> results = TabResult.getResults(args);
         // If no BaseCommand, match BaseCommands
         if (results == null) {
@@ -69,8 +68,8 @@ public class TabCompleteHandler implements TabCompleter {
         }
 
         // Match partial to from
-
-        private static Set<String> match(String partial, Set<String> from) {
+        @NotNull
+        private static Set<String> match(@NotNull String partial, Set<String> from) {
             if (from.isEmpty() || partial.isEmpty()) return from;
 
             Set<String> matches = new HashSet<>();
@@ -80,10 +79,12 @@ public class TabCompleteHandler implements TabCompleter {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            return obj instanceof TabResult &&
-                    ((TabResult) obj).command.equals(command) &&
-                    ((TabResult) obj).argPos == argPos;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof TabResult)) return false;
+            TabResult tabResult = (TabResult) o;
+            return argPos == tabResult.argPos &&
+                    Objects.equals(command, tabResult.command);
         }
     }
 }

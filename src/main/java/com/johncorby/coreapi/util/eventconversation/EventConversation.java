@@ -4,11 +4,13 @@ import com.johncorby.coreapi.util.storedclass.Identifiable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Like the conversation api but works with events
  */
 public class EventConversation extends Identifiable<Player> implements Listener {
+    @Nullable
     private EventPrompt firstPrompt, currentPrompt;
     private boolean abandoned;
 
@@ -16,12 +18,13 @@ public class EventConversation extends Identifiable<Player> implements Listener 
         super(forWhom);
     }
 
+    @Nullable
     public static EventConversation get(Player identity) {
         return get(EventConversation.class, identity);
     }
 
     @Override
-    public boolean create() throws IllegalStateException {
+    public boolean create() {
         if (!super.create()) return false;
 
         if (firstPrompt == null)

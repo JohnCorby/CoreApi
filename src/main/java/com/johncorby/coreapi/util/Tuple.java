@@ -1,5 +1,8 @@
 package com.johncorby.coreapi.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -19,20 +22,22 @@ public class Tuple<A, B> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Tuple)) return false;
-        Tuple t = (Tuple) obj;
-        return Objects.equals(a, t.a) && Objects.equals(b, t.b);
-    }
-
-
-    @Override
-    public String toString() {
-        return "Tuple<" + a + ", " + b + ">@" + Integer.toHexString(hashCode());
+    public boolean equals(@Nullable Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tuple<?, ?> tuple = (Tuple<?, ?>) o;
+        return Objects.equals(a, tuple.a) &&
+                Objects.equals(b, tuple.b);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(a, b);
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return "Tuple<" + a + ", " + b + ">@" + Integer.toHexString(hashCode());
     }
 }

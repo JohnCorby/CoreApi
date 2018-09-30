@@ -2,6 +2,7 @@ package com.johncorby.coreapi.command;
 
 import com.johncorby.coreapi.util.MessageHandler;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
 import static org.bukkit.Bukkit.getConsoleSender;
@@ -13,7 +14,7 @@ public class Reload extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(Player sender, String[] args) {
+    public boolean onCommand(@NotNull Player sender, String[] args) {
         MessageHandler.info(sender, "Reloading " + PLUGIN.getName());
         // Reload using console and plugman
         return getServer().dispatchCommand(getConsoleSender(), "plugman reload " + PLUGIN.getName());

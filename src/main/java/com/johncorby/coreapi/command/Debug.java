@@ -3,6 +3,7 @@ package com.johncorby.coreapi.command;
 import com.johncorby.coreapi.util.MessageHandler;
 import com.johncorby.coreapi.util.storedclass.StoredObject;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
@@ -12,14 +13,14 @@ public class Debug extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(Player sender, String[] args) {
+    public boolean onCommand(@NotNull Player sender, String[] args) {
         //debug(Thread.getAllStackTraces());
-        for (StoredObject c : StoredObject.getClasses())
+        for (StoredObject c : StoredObject.objects)
             try {
                 if (c.getDebug() == null) continue;
                 MessageHandler.debug(c.getDebug().toArray());
             } catch (Exception e) {
-                MessageHandler.debug("Error getting debug for " + c + ": " + getStackTrace(e));
+                MessageHandler.error("Error getting debug for " + c + ": " + getStackTrace(e));
             }
         MessageHandler.info(sender, "See console");
         return true;

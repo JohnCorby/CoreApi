@@ -1,12 +1,16 @@
 package com.johncorby.coreapi.util.storedclass;
 
-import java.util.HashSet;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode> extends Identifiable<I> {
-    protected Set<C> children = new HashSet<>();
+import static com.johncorby.coreapi.util.Common.*;
+
+public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode>
+        extends Identifiable<I> {
     protected P parent;
 
     public IdentNode(I identity, P parent) {
@@ -14,52 +18,40 @@ public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode> ext
         this.parent = parent;
     }
 
-//    public IdentNode(I identity, IdentNode... children) {
-//        super(identity);
-//        create(identity, null, children);
-//    }
-
-    protected static <I extends IdentNode> I get(Class<I> type,
+    protected static <T extends IdentNode> T get(@NotNull Class<T> type,
                                                  Object identity,
-                                                 IdentNode parent) {
-        Set<I> is = getClasses().get(type);
-        for (I i : is)
+                                                 @NotNull IdentNode parent) {
+        Set<T> is = objects.get(type);
+        for (T i : is)
             if (i.get().equals(identity) &&
-                    i.getParent().equals(parent)) return i;
-        //throw new IllegalStateException(String.format("%s<%s, %s> doesn't exist",
-        //        clazz.getSimpleName(),
-        //        identity,
-        //        parent));
+                    Objects.equals(i.parent, parent)) return i;
         return null;
     }
 
-    @Override
-    public boolean create() {
-        if (!super.create()) return false;
-        if (parent != null) parent.children.add(this);
-        return true;
-    }
+//    @Override
+//    public boolean create() {
+//        if (!super.create()) return false;
+//        //if (parent != null) parent.children.add(this);
+//        return true;
+//    }
 
     @Override
     public boolean dispose() {
         if (!super.dispose()) return false;
-        if (parent != null) parent.children.remove(this);
-        children.forEach(IdentNode::dispose);
+        //if (parent != null) parent.children.remove(this);
+        getChildren().forEach(IdentNode::dispose);
         return true;
     }
 
 
-    public P getParent() throws IllegalStateException {
-        if (!exists())
-            throw new IllegalStateException(this + " doesn't exist");
+    public P getParent() {
         return parent;
     }
 
 
+    @NotNull
     public Set<C> getChildren() {
-        if (!exists())
-            throw new IllegalStateException(this + " doesn't exist");
-        return children;
+        return toSet(map(filter(objects.get(IdentNode.class), i -> Objects.equals(i.parent, this)), c -> (C) c));
     }
 
     @Override
@@ -71,18 +63,23 @@ public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode> ext
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!getClass().equals(obj.getClass())) return false;
-        IdentNode i = (IdentNode) obj;
-        return Objects.equals(identity, i.identity) &&
-                Objects.equals(parent, i.parent);
+    public boolean equals(@Nullable Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        IdentNode<?, ?, ?> identNode = (IdentNode<?, ?, ?>) o;
+        return Objects.equals(parent, identNode.parent);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), parent);
+    }
 
     @Override
     public List<String> getDebug() {
         List<String> r = super.getDebug();
-        r.add("Children: " + children);
+        r.add("Children: " + getChildren());
         return r;
     }
 }
