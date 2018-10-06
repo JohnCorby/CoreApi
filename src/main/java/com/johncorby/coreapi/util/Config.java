@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import static com.johncorby.coreapi.CoreApiPlugin.PLUGIN;
-import static com.johncorby.coreapi.util.Common.toList;
-import static com.johncorby.coreapi.util.Common.toSet;
+import static com.johncorby.coreapi.util.Conversions.toList;
+import static com.johncorby.coreapi.util.Conversions.toSet;
 
 public class Config {
     public static Set<?> getSet(String path) {

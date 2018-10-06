@@ -12,8 +12,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.johncorby.coreapi.util.Common.filter;
-import static com.johncorby.coreapi.util.Common.toSet;
+import static com.johncorby.coreapi.util.Collections.filter;
+import static com.johncorby.coreapi.util.Conversions.toList;
+import static com.johncorby.coreapi.util.Conversions.toSet;
 import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
 public class CommandHandler implements CommandExecutor {
@@ -47,7 +48,7 @@ public class CommandHandler implements CommandExecutor {
 
     private static void getHelp(@NotNull Player sender, BaseCommand... commands) {
         // Filter out non-perm commands
-        commands = filter(commands, c -> c.hasPermission(sender));
+        commands = filter(toList(commands), c -> c.hasPermission(sender)).toArray(new BaseCommand[0]);
 
         // Header
         MessageHandler.info(sender, "----- Help for commands -----");

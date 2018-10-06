@@ -6,8 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import static com.johncorby.coreapi.util.Common.*;
+import java.util.stream.Collectors;
 
 public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode>
         extends Identifiable<I> {
@@ -51,7 +50,10 @@ public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode>
 
     @NotNull
     public Set<C> getChildren() {
-        return toSet(map(filter(objects.get(IdentNode.class), i -> Objects.equals(i.parent, this)), c -> (C) c));
+        return objects.get(IdentNode.class).stream()
+                .filter(i -> Objects.equals(i.parent, this))
+                .map(c -> (C) c)
+                .collect(Collectors.toSet());
     }
 
     @Override

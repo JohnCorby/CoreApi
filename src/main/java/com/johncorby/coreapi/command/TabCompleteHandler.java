@@ -1,7 +1,6 @@
 package com.johncorby.coreapi.command;
 
 import com.johncorby.coreapi.CoreApiPlugin;
-import com.johncorby.coreapi.util.Common;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -10,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static com.johncorby.coreapi.util.Conversions.toSet;
 
 public class TabCompleteHandler implements TabCompleter {
     private static final Set<TabResult> tabResults = new HashSet<>();
@@ -27,7 +28,7 @@ public class TabCompleteHandler implements TabCompleter {
     }
 
     public static void register(String command, int argPos, String... results) {
-        TabResult tabResult = new TabResult(command, argPos, () -> Common.toSet(results));
+        TabResult tabResult = new TabResult(command, argPos, () -> toSet(results));
         if (tabResults.contains(tabResult))
             throw new IllegalArgumentException("TabResult already exists");
         tabResults.add(tabResult);
