@@ -5,7 +5,7 @@ import com.johncorby.coreapi.command.CommandHandler;
 import com.johncorby.coreapi.command.TabCompleteHandler;
 import com.johncorby.coreapi.listener.ListenerHandler;
 import com.johncorby.coreapi.util.MessageHandler;
-import com.johncorby.coreapi.util.storedclass.StoredObject;
+import com.johncorby.coreapi.util.storedclass.Identifiable;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +28,7 @@ public abstract class CoreApiPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (StoredObject o : StoredObject.objects) o.dispose();
+        for (Identifiable o : Identifiable.objects) o.dispose();
         Bukkit.getScheduler().cancelTasks(this);
 
         MessageHandler.info(PLUGIN.getName() + " disabled");

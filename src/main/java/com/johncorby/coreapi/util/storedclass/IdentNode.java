@@ -43,11 +43,6 @@ public abstract class IdentNode<I, P extends IdentNode, C extends IdentNode>
     }
 
 
-    public P getParent() {
-        return parent;
-    }
-
-
     @NotNull
     public Set<C> getChildren() {
         return objects.get(IdentNode.class).stream()

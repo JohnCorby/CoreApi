@@ -1,7 +1,7 @@
 package com.johncorby.coreapi.command;
 
 import com.johncorby.coreapi.util.MessageHandler;
-import com.johncorby.coreapi.util.storedclass.StoredObject;
+import com.johncorby.coreapi.util.storedclass.Identifiable;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public class Debug extends BaseCommand {
     @Override
     public boolean onCommand(@NotNull Player sender, String[] args) {
         //debug(Thread.getAllStackTraces());
-        for (StoredObject c : StoredObject.objects)
+        for (Identifiable c : Identifiable.objects)
             try {
                 if (c.getDebug() == null) continue;
                 MessageHandler.debug(c.getDebug().toArray());
